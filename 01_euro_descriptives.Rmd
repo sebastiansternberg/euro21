@@ -1,0 +1,151 @@
+---
+title: "Euro Descriptives"
+author: "ssternberg"
+date: "6/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+
+rm(list = ls())
+
+require(dplyr)
+
+```
+
+
+
+```{r}
+
+Uefa.Euro.Cup.Participated.Teams.General.Statistics <- read.csv("~/Documents/Euro21Predictions/euro21/data/Uefa Euro Cup Participated Teams General Statistics.csv")
+
+df_all <- read.csv("~/Documents/Euro21Predictions/euro21/data/Uefa Euro Cup All Matches.csv")
+
+
+```
+
+
+```{r}
+#get mean of goals across all matches ever:
+
+
+df_all$total_goals <- df_all$HomeTeamGoals + df_all$AwayTeamGoals
+
+
+mean_total_goals <- mean(df_all$total_goals)
+cat("the mean number of goals overall is", mean_total_goals)
+
+goals_per_cs <- df_all %>% group_by(Year) %>% dplyr::summarize(Mean = mean(total_goals),
+                                                               SD = sd(total_goals
+                                                                       ))
+
+goals_per_cs
+#summarize(Mean = mean(price, na.rm=TRUE))
+
+
+```
+
+
+
+
+
+```{r}
+require(plotly)
+
+
+
+
+fig <- plot_ly(goals_per_cs, x = ~Year, y = ~Mean) 
+fig <- fig %>% add_lines()
+
+fig
+
+#fig <- plot_ly(df, x = ~x, y = ~y, color = ~cut) 
+#fig <- fig %>% add_lines()
+
+#fig
+
+
+
+```
+
+
+PLot the mean goals per stage (group etc.)
+
+```{r}
+
+unique(df_all$Stage)
+
+#recode the different group stage namings:
+
+df_all$StageCleaned <-  ifelse(grepl("Group", df_all$Stage), "GroupStage", df_all$Stage)
+
+
+goals_per_stage <- df_all %>% group_by(StageCleaned) %>% dplyr::summarize(Mean = mean(total_goals),
+                                                               SD = sd(total_goals))
+
+
+#test whether statiscially significant less in group than later?
+
+df_all$dummy_groupstage <-  ifelse(grepl("Group", df_all$Stage), "GroupStage", "NoGroupStage")
+
+t.test(df_all$total_goals ~ df_all$dummy_groupstage)
+
+#Not sign. less goals in not group stage than group stage
+
+```
+```{r}
+
+fig <- plot_ly(
+  #x = c("giraffes", "orangutans", "monkeys"),
+  x = goals_per_stage$StageCleaned,
+  #y = c(20, 14, 23),
+  y = goals_per_stage$Mean,
+  name = "SF Zoo",
+  type = "bar"
+)
+
+fig
+
+
+```
+
+
+
+```{r}
+
+
+```
+
+
+mean goals per team
+
+
+```{r}
+df_all$
+
+
+
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+
+
